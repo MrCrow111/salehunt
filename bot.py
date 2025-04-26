@@ -58,7 +58,7 @@ async def fetch_and_post_deals():
 
         await asyncio.sleep(30 * 60)
 
-if__name__== "__main__":
+if__name__=="__main__":
     print("🚀 Бот запущен и следит за скидками!")
     log_message("🚀 Бот запущен.")
     asyncio.run(fetch_and_post_deals())
