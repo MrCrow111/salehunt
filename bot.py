@@ -6,8 +6,8 @@ from datetime import datetime
 # Твой токен от BotFather
 BOT_TOKEN = "7758500745:AAGF3Vr0GLbQgk_XudSHGxZVbC33Spwtm3o"
 
-# Твой канал
-CHANNEL_ID = "@SaleHuntT"
+# ID канала Telegram (если канал приватный или username не работает)
+CHANNEL_ID = -1002650552114  # числовой ID без кавычек
 
 # Ссылки на фиды скидок
 RSS_FEEDS = [
@@ -30,6 +30,13 @@ def log_message(message: str):
         f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {message}\n")
 
 async def fetch_and_post_deals():
+    # Тестовое сообщение при запуске
+    try:
+        await bot.send_message(chat_id=CHANNEL_ID, text="✅ SaleHunt Bot успешно запущен и следит за скидками!")
+        log_message("✅ Тестовое сообщение отправлено.")
+    except Exception as test_error:
+        log_message(f"❌ Ошибка при отправке тестового сообщения: {test_error}")
+
     while True:
         for feed_url in RSS_FEEDS:
             try:
@@ -59,7 +66,8 @@ async def fetch_and_post_deals():
         # Проверять новые предложения каждые 30 минут
         await asyncio.sleep(30 * 60)
 
-if __name__ == "__main__":
+# Запуск
+if name == "__main__":
     print("🚀 Бот запущен и следит за скидками!")
     log_message("🚀 Бот запущен.")
     asyncio.run(fetch_and_post_deals())
