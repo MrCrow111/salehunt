@@ -2,12 +2,11 @@ import feedparser
 import asyncio
 from telegram import Bot
 from datetime import datetime
+import os
 
-# Твой токен от BotFather
-BOT_TOKEN = "7758500745:AAGF3Vr0GLbQgk_XudSHGxZVbC33Spwtm3o"
-
-# ID канала Telegram (если канал приватный или username не работает)
-CHANNEL_ID = -1002650552114  # числовой ID без кавычек
+# Получаем данные из переменных окружения
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
 
 # Ссылки на фиды скидок
 RSS_FEEDS = [
@@ -15,17 +14,11 @@ RSS_FEEDS = [
     "https://www.hotukdeals.com/tag/amazon.rss"
 ]
 
-# Создаем объект бота
 bot = Bot(token=BOT_TOKEN)
-
-# Список уже опубликованных ссылок
 posted_links = set()
-
-# Файл для логов
 LOG_FILE = "bot_log.txt"
 
 def log_message(message: str):
-    """Запись сообщений в лог-файл с таймштампом"""
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {message}\n")
 
@@ -33,7 +26,7 @@ async def fetch_and_post_deals():
     # Тестовое сообщение при запуске
     try:
         await bot.send_message(chat_id=CHANNEL_ID, text="✅ SaleHunt Bot успешно запущен и следит за скидками!")
-        log_message("✅ Тестовое сообщение отправлено.")
+        log_message("✅ Бот стартовал и отправил тестовое сообщение.")
     except Exception as test_error:
         log_message(f"❌ Ошибка при отправке тестового сообщения: {test_error}")
 
@@ -63,10 +56,8 @@ async def fetch_and_post_deals():
                 print(f"❌ Ошибка загрузки фида: {feed_error}")
                 log_message(f"❌ Ошибка загрузки фида: {feed_error}")
 
-        # Проверять новые предложения каждые 30 минут
         await asyncio.sleep(30 * 60)
 
-# Запуск
 if name == "__main__":
     print("🚀 Бот запущен и следит за скидками!")
     log_message("🚀 Бот запущен.")
